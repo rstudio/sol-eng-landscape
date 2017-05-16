@@ -2,50 +2,81 @@
 title: "RStudio Data Access Landscape"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    orientation: rows
+runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-```
-
-Column {data-width=650}
------------------------------------------------------------------------
-
-### 
-
-```{r}
+library(shiny)
 library(visNetwork)
 library(readr)
+library(dplyr)
+```
 
-
-
+```{r data, include = FALSE}
 nodes <- read_csv("nodes.csv")
+edges <- read_csv("edges.csv") 
+```
+
+Row {data-height=200}
+-----------------------------------------------------------------------
+### Options 
+
+```{r}
+selection_options <- c(
+  "Show All",
+  "RStudio Drivers",
+  "RStudio Drivers - dplyr supported", 
+  "All dplyr supported",
+  "Spark related",
+  "Hadoop related")
+selectInput("filter","Filter: ", selection_options, selection_options[1], selectize = FALSE)
+```
+
+Row {data-height=800}
+-----------------------------------------------------------------------
+
+### Data Access
+
+```{r}
+visNetworkOutput("landscape")
+```
 
 
-edges <- read_csv("edges.csv")
+```{r server}
 
+output$landscape <- renderVisNetwork({
+  
+  if(input$filter=="RStudio Drivers") nodes <- filter(nodes, drivers==1)
+  if(input$filter=="RStudio Drivers - dplyr supported") nodes <- filter(nodes, dplyr==1)
+  if(input$filter=="All dplyr supported") nodes <- filter(nodes, alldplyr==1)
+  if(input$filter=="Spark related") nodes <- filter(nodes, spark==1)
+  if(input$filter=="Hadoop related") nodes <- filter(nodes, hadoop==1)
 
-visNetwork(nodes, edges) %>%
-  visLayout(randomSeed = 92) %>%
-  visEdges(arrows = "to") %>%
-  visGroups(
-    groupname = "User", 
-    shape = "icon", 
-    main = "RStudio Data Landscape",
-    width = "100%",
-    icon = list(
-      code = "f007", 
-      size = 50, 
-      color = "blue"
-      )
-    ) %>%
-  visGroups(groupname = "Datasource" , color = "cyan") %>%
-  visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
-  visGroups(groupname = "RS Driver" , color = "yellow") %>%
-  visGroups(groupname = "Package" , color = "lightblue") %>%
-  visGroups(groupname = "Spark" , color = "lightgray") %>%
-  addFontAwesome() %>%
-  visLegend(width = 0.08)
+      
+  visNetwork(nodes, edges) %>%
+    visLayout(randomSeed = 100) %>%
+    visEdges(arrows = "to") %>%
+    visGroups(
+      groupname = "User", 
+      shape = "icon", 
+      main = "RStudio Data Landscape",
+      width = "100%",
+      icon = list(
+        code = "f007", 
+        size = 50, 
+        color = "blue"
+        )
+      ) %>%
+    visGroups(groupname = "Datasource" , color = "cyan") %>%
+    visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
+    visGroups(groupname = "RS Driver" , color = "yellow") %>%
+    visGroups(groupname = "Package" , color = "lightblue") %>%
+    visGroups(groupname = "Other" , color = "pink") %>%
+    addFontAwesome() %>%
+    visLegend(width = 0.08)
+  }
+)
+
 ```

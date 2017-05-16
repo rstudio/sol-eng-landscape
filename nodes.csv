@@ -1,1 +1,53 @@
-﻿id,label,group,shape,color1,dplyr,Package,ellipse,lightblue2,dbplyr,Package,ellipse,lightblue3,DBI,Package,ellipse,lightblue4,sparklyr,Package,ellipse,lightblue5,odbc,Package,ellipse,lightblue6,MS SQL,RS Driver,ellipse,yellow7,Impala,RS Driver,ellipse,yellow8,Hadoop,RS Driver,ellipse,pink9,Hive,RS Driver,ellipse,yellow10,Spark,RS Driver,ellipse,yellow11,HBase,RS Driver,ellipse,yellow12,Oracle,RS Driver,ellipse,yellow13,Couchbase,RS Driver,ellipse,yellow14,MySQL,RS Driver,ellipse,yellow15,PostgreSQL,RS Driver,ellipse,yellow16,Drill,RS Driver,ellipse,yellow17,Cassandra,RS Driver,ellipse,yellow18,Salesforce,RS Driver,ellipse,yellow19,Phoenix,RS Driver,ellipse,yellow21,R User,User,icon,lightblue22,RMySQL,Package,ellipse,lightblue23,RPostgreSQL,Package,ellipse,lightblue24,RSQLite,Package,ellipse,lightblue25,SQLite,Datasource,ellipse,cyan26,Thrift / Spark,Spark,ellipse,lightgray27,AWS S3,RS Driver,ellipse,cyan28,MS SQL,Datasource,ellipse,cyan29,Impala,Datasource,ellipse,cyan31,Hive,Datasource,ellipse,cyan32,Spark,Spark,ellipse,lightgray33,HBase,Datasource,ellipse,cyan34,Oracle,Datasource,ellipse,cyan35,Couchbase,Datasource,ellipse,cyan36,MySQL,Datasource,ellipse,cyan37,PostgreSQL,Datasource,ellipse,cyan38,Drill,Datasource,ellipse,cyan39,Cassandra,Datasource,ellipse,cyan40,Salesforce,Datasource,ellipse,cyan41,Phoenix,Datasource,ellipse,cyan42,BigQuery,Datasource,ellipse,cyan43,BigRQuery,Package,ellipse,lightblue44,BigQuery,RS Driver,ellipse,yellow45,Spark Cache,Spark,ellipse,lightgray46,RedShift,RS Driver,ellipse,yellow47,RedShift,Datasource,ellipse,cyan48,Dynamo,RS Driver,ellipse,yellow49,Dynamo,Datasource,ellipse,cyan50,Presto,RS Driver,ellipse,yellow51,Presto,Datasource,ellipse,cyan52,Mongo,RS Driver,ellipse,yellow53,Mongo,Datasource,ellipse,cyan54,Windows Driver,Other Driver,ellipse,lightgreen
+id,label,group,shape,color,drivers,dplyr,alldplyr,spark,hadoop
+1,dplyr,Package,ellipse,pink,1,1,1,1,1
+2,dbplyr,Package,ellipse,pink,1,1,1,1,1
+3,DBI,Package,ellipse,pink,1,1,1,1,1
+4,sparklyr,Package,ellipse,pink,0,0,1,1,1
+5,odbc,Package,ellipse,pink,1,1,1,1,1
+6,MS SQL,RS Driver,ellipse,yellow,1,1,1,0,0
+7,Impala,RS Driver,ellipse,yellow,1,1,1,0,1
+8,HDFS,Other,ellipse,lightblue,0,0,0,1,1
+9,Hive,RS Driver,ellipse,yellow,1,1,1,0,1
+10,Spark,RS Driver,ellipse,yellow,1,0,0,1,1
+11,HBase,RS Driver,ellipse,yellow,1,0,0,0,1
+12,Oracle,RS Driver,ellipse,yellow,1,0,0,0,0
+13,Couchbase,RS Driver,ellipse,yellow,1,0,0,0,0
+14,MySQL,RS Driver,ellipse,yellow,1,1,1,0,0
+15,PostgreSQL,RS Driver,ellipse,yellow,1,1,1,0,0
+16,Drill,RS Driver,ellipse,yellow,1,0,0,0,0
+17,Cassandra,RS Driver,ellipse,yellow,1,0,0,0,0
+18,Salesforce,RS Driver,ellipse,yellow,1,0,0,0,0
+19,Phoenix,RS Driver,ellipse,yellow,1,0,0,0,0
+21,R User,User,icon,pink,1,0,1,1,1
+22,RMySQL,Package,ellipse,pink,0,0,1,0,0
+23,RPostgreSQL,Package,ellipse,pink,0,0,1,0,0
+24,RSQLite,Package,ellipse,pink,0,0,1,0,0
+25,SQLite,Datasource,ellipse,cyan,0,0,1,0,0
+26,Thrift,Other,ellipse,lightblue,1,0,0,1,1
+27,AWS S3,Datasource,ellipse,cyan,0,0,0,1,0
+28,MS SQL,Datasource,ellipse,cyan,1,1,1,0,0
+29,Impala,Datasource,ellipse,cyan,1,1,1,0,1
+31,Hive,Datasource,ellipse,cyan,1,1,1,1,1
+32,Spark,Other,ellipse,lightblue,0,0,1,1,1
+33,HBase,Datasource,ellipse,cyan,1,0,0,0,1
+34,Oracle,Datasource,ellipse,cyan,1,0,0,0,0
+35,Couchbase,Datasource,ellipse,cyan,1,0,0,0,0
+36,MySQL,Datasource,ellipse,cyan,1,1,1,0,0
+37,PostgreSQL,Datasource,ellipse,cyan,1,1,1,0,0
+38,Drill,Datasource,ellipse,cyan,1,0,0,0,0
+39,Cassandra,Datasource,ellipse,cyan,1,0,0,0,0
+40,Salesforce,Datasource,ellipse,cyan,1,0,0,0,0
+41,Phoenix,Datasource,ellipse,cyan,1,0,0,0,0
+42,BigQuery,Datasource,ellipse,cyan,1,1,1,0,0
+43,BigRQuery,Package,ellipse,pink,0,0,1,0,0
+44,BigQuery,RS Driver,ellipse,yellow,1,1,1,0,0
+45,Spark Cache,Other,ellipse,lightblue,0,0,0,1,1
+46,RedShift,RS Driver,ellipse,yellow,1,0,0,0,0
+47,RedShift,Datasource,ellipse,cyan,1,0,0,0,0
+48,Dynamo,RS Driver,ellipse,yellow,1,0,0,0,0
+49,Dynamo,Datasource,ellipse,cyan,1,0,0,0,0
+50,Presto,RS Driver,ellipse,yellow,1,0,0,0,0
+51,Presto,Datasource,ellipse,cyan,1,0,0,0,0
+52,Mongo,RS Driver,ellipse,yellow,1,0,0,0,0
+53,Mongo,Datasource,ellipse,cyan,1,0,0,0,0
+54,Windows Driver,Other Driver,ellipse,lightgreen,0,0,0,0,0

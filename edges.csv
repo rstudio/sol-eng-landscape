@@ -1,1 +1,63 @@
-﻿from,to,label,comment,color1,2,,dplyr to dbplyr,orange3,5,,dbi to odbc,green5,6,,,orange5,7,,,orange5,9,,,orange5,11,,,green5,12,,,green5,13,,,green5,14,,,orange5,15,,,orange5,16,,,green5,17,,,green5,18,,,green5,19,,,green4,32,,sparklyr to spark,red7,29,dplyr support,Impala to Hadoop,orange32,8,sparklyr r/w HDFS,Spark to Hadoop,red21,1,Verbs,user / dplyr,orange21,3,Queries,user / dbi,green21,4,Verbs | API,user / sparklyr,red2,3,SQL translations,dbplyr to dbi,orange3,22,,dbi to rmysql,orange3,23,,dbi to my postgresql,orange3,24,,dbi to rsqlite,orange24,25,dplyr support,rsqlite to sqlite,orange22,14,,rmysql,orange23,37,dplyr support,postgresql,orange32,27,,sparklyr s3,red9,31,dplyr support,,orange11,33,,,green12,34,,,green13,35,,,green14,36,dplyr support,,orange15,37,dplyr support,,orange16,38,,,green17,39,,,green18,40,,,green19,41,,,green6,28,dplyr support,,orange32,31,dplyr support,,red31,8,,,lightgrey29,8,,,lightgrey26,31,Queries only,,green5,10,,,green10,26,Needs Thrift service,,green33,8,,,lightgrey3,4,Uses sparklyr connection,,green5,44,,,green44,42,,,green3,43,,,green43,42,,,green32,45,,,red46,47,,,green48,49,,,green50,51,,,green52,53,,,green5,46,,,green5,48,,,green5,50,,,green5,52,,,green5,54,,,orange54,28,dplyr support,,orange
+from,to,label,comment,originalcolor,color
+1,2,,dplyr to dbplyr,orange,grey
+3,5,,dbi to odbc,green,grey
+5,6,,,orange,grey
+5,7,,,orange,grey
+5,9,,,orange,grey
+5,11,,,green,grey
+5,12,,,green,grey
+5,13,,,green,grey
+5,14,,,orange,grey
+5,15,,,orange,grey
+5,16,,,green,grey
+5,17,,,green,grey
+5,18,,,green,grey
+5,19,,,green,grey
+4,32,,sparklyr to spark,red,grey
+7,29,supports dplyr,Impala to Hadoop,orange,grey
+32,8,sparklyr r/w HDFS,Spark to Hadoop,red,grey
+21,1,Verbs,user / dplyr,orange,grey
+21,3,Queries,user / dbi,green,grey
+21,4,Verbs | API,user / sparklyr,red,grey
+2,3,SQL translations,dbplyr to dbi,orange,grey
+3,22,,dbi to rmysql,orange,grey
+3,23,,dbi to my postgresql,orange,grey
+3,24,,dbi to rsqlite,orange,grey
+24,25,supports dplyr,rsqlite to sqlite,orange,grey
+22,36,,rmysql,orange,grey
+23,37,supports dplyr,postgresql,orange,grey
+32,27,sparklyr only,sparklyr s3,red,grey
+9,31,supports dplyr,,orange,grey
+11,33,,,green,grey
+12,34,,,green,grey
+13,35,,,green,grey
+14,36,supports dplyr,,orange,grey
+15,37,supports dplyr,,orange,grey
+16,38,,,green,grey
+17,39,,,green,grey
+18,40,,,green,grey
+19,41,,,green,grey
+6,28,supports dplyr,,orange,grey
+32,31,supports dplyr,,red,grey
+31,8,,,lightgrey,grey
+29,8,,,lightgrey,grey
+5,10,,,green,grey
+10,26,,,green,grey
+33,8,,,lightgrey,grey
+3,4,Uses sparklyr connection,,green,grey
+5,44,,,green,grey
+44,42,supports dplyr,,green,grey
+3,43,,,green,grey
+43,42,supports dplyr,,green,grey
+32,45,sparklyr only,,red,grey
+46,47,,,green,grey
+48,49,,,green,grey
+50,51,,,green,grey
+52,53,,,green,grey
+5,46,,,green,grey
+5,48,,,green,grey
+5,50,,,green,grey
+5,52,,,green,grey
+5,54,,,orange,grey
+54,28,supports dplyr,,orange,grey
+26,32,,,,grey
