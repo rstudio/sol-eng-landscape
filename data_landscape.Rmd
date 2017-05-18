@@ -103,8 +103,8 @@ output$landscape <- renderVisNetwork({
     visGroups(groupname = "Datasource" , color = "cyan") %>%
     visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
     visGroups(groupname = "RS Driver" , color = "yellow") %>%
-    visGroups(groupname = "Package" , color = "lightblue") %>%
-    visGroups(groupname = "Other" , color = "pink") %>%
+    visGroups(groupname = "Package" , color = "pink") %>%
+    visGroups(groupname = "Other" , color = "lightblue") %>%
     addFontAwesome() %>%
     visLegend(width = 0.08)
   }
@@ -160,8 +160,8 @@ output$datasource <- renderVisNetwork({
     visGroups(groupname = "Datasource" , color = "cyan") %>%
     visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
     visGroups(groupname = "RS Driver" , color = "yellow") %>%
-    visGroups(groupname = "Package" , color = "lightblue") %>%
-    visGroups(groupname = "Other" , color = "pink") %>%
+    visGroups(groupname = "Package" , color = "pink") %>%
+    visGroups(groupname = "Other" , color = "lightblue") %>%
     addFontAwesome() %>%
     visLegend(width = 0.08)
   }
