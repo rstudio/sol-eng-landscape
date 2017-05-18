@@ -8,9 +8,9 @@
 
 
 
-<title>RStudio Data Access Landscape</title>
+<title>RStudio Data Landscape</title>
 
-<meta property="og:title" content="RStudio Data Access Landscape" />
+<meta property="og:title" content="RStudio Data Landscape" />
 
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 
@@ -798,7 +798,7 @@ html, body {
   
 </span>
 <span class="navbar-brand">
-  RStudio Data Access Landscape
+  RStudio Data Landscape
   <span class="navbar-author">
         </span>
 </span>
@@ -2578,6 +2578,8 @@ window.FlexDashboardComponents.push({
 
 <div id="dashboard-container">
 
+<div id="section-by-groups" class="section level1">
+<h1>By Groups</h1>
 <div id="section-row" class="section level2" data-height="200">
 <h2>Row</h2>
 <div id="section-options" class="section level3">
@@ -2606,6 +2608,52 @@ window.FlexDashboardComponents.push({
 
 </div>
 <div id="landscape" style="width:100%; height:400px; " class="visNetwork html-widget html-widget-output"></div>
+</div>
+</div>
+</div>
+<div id="section-by-datasource" class="section level1">
+<h1>By Datasource</h1>
+<div id="section-row-2" class="section level2" data-height="200">
+<h2>Row</h2>
+<div id="section-options-1" class="section level3">
+<h3>Options</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div class="form-group shiny-input-container">
+<label class="control-label" for="ds">Datasource: </label>
+<div>
+<select id="ds" class="form-control"><option value="AWS S3" selected>AWS S3</option>
+<option value="BigQuery">BigQuery</option>
+<option value="Cassandra">Cassandra</option>
+<option value="Couchbase">Couchbase</option>
+<option value="Drill">Drill</option>
+<option value="Dynamo">Dynamo</option>
+<option value="HBase">HBase</option>
+<option value="Hive">Hive</option>
+<option value="Impala">Impala</option>
+<option value="Mongo">Mongo</option>
+<option value="MS SQL">MS SQL</option>
+<option value="MySQL">MySQL</option>
+<option value="Oracle">Oracle</option>
+<option value="Phoenix">Phoenix</option>
+<option value="PostgreSQL">PostgreSQL</option>
+<option value="Presto">Presto</option>
+<option value="RedShift">RedShift</option>
+<option value="Salesforce">Salesforce</option>
+<option value="SQLite">SQLite</option></select>
+</div>
+</div>
+</div>
+</div>
+<div id="section-row-3" class="section level2" data-height="800">
+<h2>Row</h2>
+<div id="section-data-access-1" class="section level3">
+<h3>Data Access</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<div id="datasource" style="width:100%; height:400px; " class="visNetwork html-widget html-widget-output"></div>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
@@ -2621,6 +2669,12 @@ library(dplyr)
 <script type="application/shiny-prerendered" data-context="data">
 nodes <- read_csv("nodes.csv")
 edges <- read_csv("edges.csv") 
+
+options <- nodes %>%
+  filter(group == "Datasource") %>%
+  arrange(label)
+
+options <- as.character(options$label)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -2658,12 +2712,71 @@ output$landscape <- renderVisNetwork({
   }
 )
 
+output$datasource <- renderVisNetwork({
+  
+    
+  get_id <- nodes %>%
+    filter(
+      group == "Datasource",
+      label == input$ds
+      ) 
+  
+  node_group <- get_id$id[1]
+    
+  for(i in 1:nrow(edges)){
+    data_node <- data.frame(to = node_group) %>%
+      inner_join(edges, by = "to")
+    
+    supports <- data_node %>%
+      filter(label == "supports dplyr")
+    
+    supports_dplyr <- nrow(supports) > 0
+    
+    new_nodes <- as.integer(data_node$from)
+    node_group <- unique(c(node_group, new_nodes))
+  }
+
+  
+  nodes <- nodes %>%
+    inner_join(data.frame(id = node_group), by = "id")
+  
+  
+  if(supports_dplyr == FALSE)nodes <- filter(nodes, label != "dplyr", label != "dbplyr")
+
+      
+
+  visNetwork(nodes, edges) %>%
+    visLayout(randomSeed = 1) %>%
+    visEdges(arrows = "to") %>%
+    visGroups(
+      groupname = "User", 
+      shape = "icon", 
+      main = "RStudio Data Landscape",
+      width = "100%",
+      icon = list(
+        code = "f007", 
+        size = 50, 
+        color = "blue"
+        )
+      ) %>%
+    visGroups(groupname = "Datasource" , color = "cyan") %>%
+    visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
+    visGroups(groupname = "RS Driver" , color = "yellow") %>%
+    visGroups(groupname = "Package" , color = "lightblue") %>%
+    visGroups(groupname = "Other" , color = "pink") %>%
+    addFontAwesome() %>%
+    visLegend(width = 0.08)
+  }
+)
+
+
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">
-{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cosmo.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["stickytableheaders"]},{"type":"character","attributes":{},"value":["0.1.19"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/stickytableheaders"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.stickytableheaders.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["flexdashboard"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["0.8"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["vis"]},{"type":"character","attributes":{},"value":["4.17.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/vis"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["vis.min.js"]},{"type":"character","attributes":{},"value":["vis.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["visNetwork-binding"]},{"type":"character","attributes":{},"value":["1.0.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[false]}]}]}
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cosmo.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["stickytableheaders"]},{"type":"character","attributes":{},"value":["0.1.19"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/stickytableheaders"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.stickytableheaders.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["flexdashboard"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["0.8"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["vis"]},{"type":"character","attributes":{},"value":["4.17.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/vis"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["vis.min.js"]},{"type":"character","attributes":{},"value":["vis.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["visNetwork-binding"]},{"type":"character","attributes":{},"value":["1.0.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[false]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["0.8"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["vis"]},{"type":"character","attributes":{},"value":["4.17.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/vis"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["vis.min.js"]},{"type":"character","attributes":{},"value":["vis.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["visNetwork-binding"]},{"type":"character","attributes":{},"value":["1.0.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["visNetwork"]},{"type":"logical","attributes":{},"value":[false]}]}]}
 </script>
 <!--/html_preserve-->
+</div>
 </div>
 </div>
 

@@ -1,5 +1,5 @@
 ---
-title: "RStudio Data Access Landscape"
+title: "RStudio Data Landscape"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -17,8 +17,16 @@ library(dplyr)
 ```{r data, include = FALSE}
 nodes <- read_csv("nodes.csv")
 edges <- read_csv("edges.csv") 
+
+options <- nodes %>%
+  filter(group == "Datasource") %>%
+  arrange(label)
+
+options <- as.character(options$label)
 ```
 
+By Groups
+======================================================================
 Row {data-height=200}
 -----------------------------------------------------------------------
 ### Options 
@@ -42,6 +50,29 @@ Row {data-height=800}
 ```{r}
 visNetworkOutput("landscape")
 ```
+
+
+
+
+By Datasource
+======================================================================
+Row {data-height=200}
+-----------------------------------------------------------------------
+### Options 
+
+```{r}
+selectInput("ds","Datasource: ", options, options[1], selectize = FALSE)
+```
+
+Row {data-height=800}
+-----------------------------------------------------------------------
+
+### Data Access
+
+```{r}
+visNetworkOutput("datasource")
+```
+
 
 
 ```{r server}
@@ -79,4 +110,63 @@ output$landscape <- renderVisNetwork({
   }
 )
 
+output$datasource <- renderVisNetwork({
+  
+    
+  get_id <- nodes %>%
+    filter(
+      group == "Datasource",
+      label == input$ds
+      ) 
+  
+  node_group <- get_id$id[1]
+    
+  for(i in 1:nrow(edges)){
+    data_node <- data.frame(to = node_group) %>%
+      inner_join(edges, by = "to")
+    
+    supports <- data_node %>%
+      filter(label == "supports dplyr")
+    
+    supports_dplyr <- nrow(supports) > 0
+    
+    new_nodes <- as.integer(data_node$from)
+    node_group <- unique(c(node_group, new_nodes))
+  }
+
+  
+  nodes <- nodes %>%
+    inner_join(data.frame(id = node_group), by = "id")
+  
+  
+  if(supports_dplyr == FALSE)nodes <- filter(nodes, label != "dplyr", label != "dbplyr")
+
+      
+
+  visNetwork(nodes, edges) %>%
+    visLayout(randomSeed = 1) %>%
+    visEdges(arrows = "to") %>%
+    visGroups(
+      groupname = "User", 
+      shape = "icon", 
+      main = "RStudio Data Landscape",
+      width = "100%",
+      icon = list(
+        code = "f007", 
+        size = 50, 
+        color = "blue"
+        )
+      ) %>%
+    visGroups(groupname = "Datasource" , color = "cyan") %>%
+    visGroups(groupname = "Other Driver" , color = "lightgreen") %>%
+    visGroups(groupname = "RS Driver" , color = "yellow") %>%
+    visGroups(groupname = "Package" , color = "lightblue") %>%
+    visGroups(groupname = "Other" , color = "pink") %>%
+    addFontAwesome() %>%
+    visLegend(width = 0.08)
+  }
+)
+
+
 ```
+
